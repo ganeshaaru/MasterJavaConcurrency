@@ -1,4 +1,4 @@
-package com.dev.bok;
+package com.dev.bok.producerconsumer;
 
 public class Main {
 

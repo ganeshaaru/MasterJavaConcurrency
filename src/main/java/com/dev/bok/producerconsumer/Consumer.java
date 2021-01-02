@@ -1,4 +1,4 @@
-package com.dev.bok;
+package com.dev.bok.producerconsumer;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
