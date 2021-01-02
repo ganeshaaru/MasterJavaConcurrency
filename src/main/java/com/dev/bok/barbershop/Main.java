@@ -18,7 +18,9 @@ public class Main {
 
         //Create customers
         for (int i = 0; i < noOfCustomers; i++) {
-            threads[i]= new Thread(new Customer(saloon));
+            Thread thread = new Thread(new Customer(saloon));
+            thread.setName("Customer-"+ i);
+            threads[i]=thread ;
         }
 
         //Barber

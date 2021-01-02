@@ -11,7 +11,7 @@ public class Saloon {
     private AtomicInteger waitingCustomerCount;
     private int noOfWaitingChairs;
     private Lock lock;
-    private Semaphore chair;
+    private Semaphore barberChair;
     private Semaphore barberLock;
     private Semaphore saloonLock;
 
@@ -19,7 +19,7 @@ public class Saloon {
         this.waitingCustomerCount = new AtomicInteger(0);
         this.noOfWaitingChairs = noOfWaitingChairs;
         this.lock = new ReentrantLock();
-        this.chair = new Semaphore(1);
+        this.barberChair = new Semaphore(1);
         this.barberLock = barberLock;
         this.saloonLock = saloonLock;
     }
@@ -36,7 +36,7 @@ public class Saloon {
         waitingCustomerCount.incrementAndGet();
 
         try {
-            chair.acquire();
+            barberChair.acquire();
 
             // decrement no of waiting customers
             waitingCustomerCount.decrementAndGet();
@@ -52,7 +52,8 @@ public class Saloon {
             //hair cut over got notify call form barber, release the chair
             System.out.println(Thread.currentThread().getName() + " "+  new Date() + " "+ "Completed HairCut ");
         } finally {
-            chair.release();
+            //Customer leaves
+            barberChair.release();
         }
 
     }
