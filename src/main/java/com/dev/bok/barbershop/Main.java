@@ -7,10 +7,10 @@ public class Main {
         int noOfCustomers=5;
         int noOfWaitingChairs=1;
         Semaphore barberLock =  new Semaphore(0);
-        Semaphore saloonLock =  new Semaphore(0);
+        Semaphore customerLock =  new Semaphore(0);
 
-        Saloon saloon = new Saloon(noOfWaitingChairs, barberLock, saloonLock);
-        Barber barber = new Barber(barberLock, saloonLock);
+        Saloon saloon = new Saloon(noOfWaitingChairs, barberLock, customerLock);
+        Barber barber = new Barber(barberLock, customerLock);
 
         Thread barberThread = new Thread(barber);
 

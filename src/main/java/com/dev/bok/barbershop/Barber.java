@@ -6,18 +6,18 @@ import java.util.concurrent.TimeUnit;
 
 public class Barber implements Runnable {
     private Semaphore barberLock;
-    private Semaphore saloonLock;
+    private Semaphore customerLock;
 
-    public Barber(Semaphore barberLock, Semaphore saloonLock) {
+    public Barber(Semaphore barberLock, Semaphore customerLock) {
         this.barberLock = barberLock;
-        this.saloonLock = saloonLock;
+        this.customerLock = customerLock;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                //sleep, customer will wake me up once he gets the chair
+                //got to sleep, customer will wake me up once he gets the chair
                 barberLock.acquire();
 
                 // customer came to seat and calling me from sleep
@@ -26,8 +26,8 @@ public class Barber implements Runnable {
                 // I'll be doing haircut.
                 doHairCut();
 
-                //haircut over, inform saloon to pick next customer
-                saloonLock.release();
+                //haircut over, inform customer to do the payment and leave.
+                customerLock.release();
 
 
             } catch (InterruptedException e) {

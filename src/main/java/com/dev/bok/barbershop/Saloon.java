@@ -13,18 +13,20 @@ public class Saloon {
     private Lock lock;
     private Semaphore barberChair;
     private Semaphore barberLock;
-    private Semaphore saloonLock;
+    private Semaphore customerLock;
 
-    public Saloon(int noOfWaitingChairs, Semaphore barberLock, Semaphore saloonLock) {
+    public Saloon(int noOfWaitingChairs, Semaphore barberLock, Semaphore customerLock) {
         this.waitingCustomerCount = new AtomicInteger(0);
         this.noOfWaitingChairs = noOfWaitingChairs;
         this.lock = new ReentrantLock();
         this.barberChair = new Semaphore(1);
         this.barberLock = barberLock;
-        this.saloonLock = saloonLock;
+        this.customerLock = customerLock;
     }
 
-    public void acceptCustomer() throws InterruptedException {
+    public void acceptWalkInCustomer() throws InterruptedException {
+
+        //If block is accessed by diff threads, needs to be protected with help of Lock
         lock.lock();
         if (isFull()) {
             System.out.println(Thread.currentThread().getName() + " : Saloon Full Customer walks out at " + new Date());
@@ -44,18 +46,24 @@ public class Saloon {
             // wake up barber
             barberLock.release();
 
-            System.out.println(Thread.currentThread().getName() + " "+  new Date() + " "+ "Starting HairCut ");
+            System.out.printf("%s having haircut at %s\n", Thread.currentThread().getName(), new Date());
 
             // wait till barber to finish haircut
-            saloonLock.acquire();
+            customerLock.acquire();
 
             //hair cut over got notify call form barber, release the chair
-            System.out.println(Thread.currentThread().getName() + " "+  new Date() + " "+ "Completed HairCut ");
+            System.out.printf("%s completed haircut at %s\n", Thread.currentThread().getName(), new Date());
         } finally {
-            //Customer leaves
+
             barberChair.release();
+            //Customer pays and leaves the saloon
+            doPayment();
         }
 
+    }
+
+    private void doPayment() {
+        System.out.printf("%s doing payment at %s\n", Thread.currentThread().getName(), new Date());
     }
 
     private boolean isFull() {

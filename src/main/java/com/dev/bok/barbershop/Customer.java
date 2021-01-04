@@ -19,17 +19,19 @@ public class Customer implements Runnable{
 
     private void walkIntoSaloon() {
         try {
-            saloon.acceptCustomer();
+            saloon.acceptWalkInCustomer();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     private void sleepSomeTime() {
+        int duration = new Random().nextInt(10);
         try {
-            TimeUnit.SECONDS.sleep(new Random().nextInt(10));
+            TimeUnit.SECONDS.sleep(duration);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.printf("%s arriving  after %d seconds \n", Thread.currentThread().getName(), duration);
     }
 }
